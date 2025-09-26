@@ -1,4 +1,17 @@
 import { StoryblokRichTextNode } from "@storyblok/react";
+// Story genérico devuelto por Storyblok
+
+export type StoryblokStory<T> = {
+  name: string;
+  created_at: string;
+  published_at?: string;
+  id: number;
+  uuid: string;
+  slug: string;
+  full_slug: string;
+  content: T;
+  [k: string]: unknown; // Storyblok siempre añade más cosas
+};
 
 export type StoryblokAsset = {
   id?: number;
@@ -15,10 +28,18 @@ export type StoryblokAsset = {
   [k: string]: unknown; // permite campos adicionales
 };
 
-// Documento RichText compatible con storyblok-rich-text-react-renderer
+// Documento RichText
 export type StoryblokRichTextDocument = {
   type: "doc";
   content: StoryblokRichTextNode[];
+};
+
+// Bloque que contiene un campo RichText llamado "Bio"
+export type BioBlock = {
+  _uid?: string;
+  component?: string;
+  Bio: StoryblokRichTextDocument;
+  [k: string]: unknown; // Storyblok suele meter metadata extra
 };
 
 export type Artist = {
@@ -28,7 +49,7 @@ export type Artist = {
   deathPlace?: string;
   name: string;
   photo?: StoryblokAsset;
-  bio?: StoryblokRichTextDocument; // campo RichText
+  bio?: BioBlock[]; // 👈 ahora es array de bloques
   _editable?: string;
   _uid?: string;
   uuid: string;

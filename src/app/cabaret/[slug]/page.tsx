@@ -2,6 +2,7 @@ import Image from "next/image";
 import { storyblokApi } from "../../../lib/storyblok";
 import { render } from "storyblok-rich-text-react-renderer";
 import type { Artist } from "../../../../types/storyblok";
+import type { BioBlock } from "../../../../types/storyblok";
 
 export async function generateStaticParams() {
   const sbApi = storyblokApi();
@@ -26,7 +27,7 @@ export default async function ArtistPage({
     version: "draft",
   });
 
-  const artist: Artist & { bio?: any[] } = data.story.content;
+  const artist: Artist & { bio?: BioBlock} = data.story.content;
 
   console.log("DATA STORYBLOK:", JSON.stringify(artist, null, 2));
 
@@ -56,10 +57,10 @@ export default async function ArtistPage({
       </p>
 
       {/* Renderizar cada bloque RichText */}
-      {artist.bio?.map((block, idx) => {
+      {artist.bio?.map((block) => {
         if (!block.Bio) return null;
         return (
-          <article className="prose max-w-none mb-6" key={idx}>
+          <article className="prose max-w-none mb-6" key={block._uid}>
             {render(block.Bio)}
           </article>
         );
