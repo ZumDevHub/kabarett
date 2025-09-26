@@ -1,9 +1,8 @@
 import Image from "next/image";
 import { storyblokApi } from "../../../lib/storyblok";
-import { renderRichText } from "@storyblok/react";
+import { render } from "storyblok-rich-text-react-renderer";
 import type { Artist } from "../../../../types/storyblok";
 
-// Funció per generar rutes estàtiques (slugs dels artistes)
 export async function generateStaticParams() {
   const sbApi = storyblokApi();
   const { data } = await sbApi.get("cdn/stories", {
@@ -11,25 +10,25 @@ export async function generateStaticParams() {
     version: "draft",
   });
 
-  return data.stories.map((story: any) => ({
+  return data.stories.map((story: { slug: string }) => ({
     slug: story.slug,
   }));
 }
 
-// Pàgina de detall
-export default async function ArtistPage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> 
+export default async function ArtistPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
 }) {
-  
   const { slug } = await params;
   const sbApi = storyblokApi();
   const { data } = await sbApi.get(`cdn/stories/cabaret/${slug}`, {
     version: "draft",
   });
 
-  const artist:Artist = data.story.content;
+  const artist: Artist & { bio?: any[] } = data.story.content;
+
+  console.log("DATA STORYBLOK:", JSON.stringify(artist, null, 2));
 
   return (
     <main className="p-8 max-w-3xl mx-auto">
@@ -51,23 +50,20 @@ export default async function ArtistPage({
       </p>
       <p className="text-lg text-gray-700 mb-6">
         <strong>Defunció:</strong>{" "}
-        {artist.deathDate ? `${artist.deathPlace} (${artist.deathDate})` : "Desconeguda"}
+        {artist.deathDate
+          ? `${artist.deathPlace} (${artist.deathDate})`
+          : "Desconeguda"}
       </p>
 
-      {/* Renderitza cada bloc dins el camp bio */}
-      {Array.isArray(artist.bio) &&
-        artist.bio.map((block, idx) =>
-        "Bio" in block ? (
-          <article
-            key={idx}
-            className="prose max-w-none mb-6"
-            dangerouslySetInnerHTML={{
-              __html: renderRichText((block as any).Bio) || "",
-        }}
-      />
-        ) : null
-      )}
-
+      {/* Renderizar cada bloque RichText */}
+      {artist.bio?.map((block, idx) => {
+        if (!block.Bio) return null;
+        return (
+          <article className="prose max-w-none mb-6" key={idx}>
+            {render(block.Bio)}
+          </article>
+        );
+      })}
     </main>
   );
 }
