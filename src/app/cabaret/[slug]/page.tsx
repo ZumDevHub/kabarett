@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { storyblokApi } from "../../../lib/storyblok";
 import { renderRichText } from "@storyblok/react";
+import type { Artist } from "../../../../types/storyblok";
 
 // Funció per generar rutes estàtiques (slugs dels artistes)
 export async function generateStaticParams() {
@@ -28,7 +29,7 @@ export default async function ArtistPage({
     version: "draft",
   });
 
-  const artist = data.story.content;
+  const artist:Artist = data.story.content;
 
   return (
     <main className="p-8 max-w-3xl mx-auto">
@@ -54,13 +55,16 @@ export default async function ArtistPage({
       </p>
 
       {/* Renderitza cada bloc dins el camp bio */}
-      {artist.bio?.map((block: any, idx: number) =>
-        block.Bio ? (
+      {Array.isArray(artist.bio) &&
+        artist.bio.map((block, idx) =>
+        "Bio" in block ? (
           <article
             key={idx}
             className="prose max-w-none mb-6"
-            dangerouslySetInnerHTML={{ __html: renderRichText(block.Bio) || "" }}
-          />
+            dangerouslySetInnerHTML={{
+              __html: renderRichText((block as any).Bio) || "",
+        }}
+      />
         ) : null
       )}
 

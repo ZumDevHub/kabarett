@@ -32,4 +32,6 @@ export type Artist = {
   // camp editor (storyblok editable) si el tens al registre:
   _editable?: string
   _uid?: string
+  uuid: string
+  full_slug: string
 }

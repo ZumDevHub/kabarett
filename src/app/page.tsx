@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { storyblokApi } from "../lib/storyblok";
-
+import type { Artist } from "../../types/storyblok";
 export default async function Home() {
   const sbApi = storyblokApi();
   const { data } = await sbApi.get("cdn/stories", {
