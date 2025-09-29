@@ -29,7 +29,7 @@ export default async function ArtistPage({
 
   const artist: Artist & { bio?: BioBlock} = data.story.content;
 
-  console.log("DATA STORYBLOK:", JSON.stringify(artist, null, 2));
+  // console.log("DATA STORYBLOK:", JSON.stringify(artist, null, 2));
 
   return (
     <main className="p-8 max-w-3xl mx-auto">
