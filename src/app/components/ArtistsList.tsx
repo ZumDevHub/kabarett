@@ -12,7 +12,7 @@ export default function ArtistsList({ artists }: {artists: StoryblokStory<Artist
   // console.log("artistsList: ", artistsList.slice(0,2))
 
   function findSurname(completeName: string) {
-    let surnameIndex = completeName.indexOf(" ") + 1;
+    const surnameIndex = completeName.indexOf(" ") + 1;
     return completeName.slice(surnameIndex)
   }
 
