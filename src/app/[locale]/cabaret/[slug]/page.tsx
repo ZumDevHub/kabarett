@@ -23,7 +23,7 @@ export default async function ArtistPage({
 }: {
   params: { slug: string; locale: string };
 }) {
-  const { slug, locale } = await params;
+  const { slug, locale } = params;
   const sbApi = storyblokApi();
   
   const { data } = await sbApi.get(`cdn/stories/cabaret/${slug}`, {
