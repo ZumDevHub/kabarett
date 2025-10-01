@@ -21,9 +21,11 @@ export async function generateStaticParams() {
 export default async function ArtistPage({
   params,
 }: {
-  params: { slug: string; locale: string };
+  params: Promise<{ slug: string; locale: string }>; // Changed to Promise
 }) {
-  const { slug, locale } = params;
+  // Await params before destructuring
+  const { slug, locale } = await params;
+  
   const sbApi = storyblokApi();
   
   const { data } = await sbApi.get(`cdn/stories/cabaret/${slug}`, {
@@ -44,10 +46,6 @@ export default async function ArtistPage({
        ← {locale === "ca" ? "Tornar" : "Back"}
       </Link>
       <h1 className="text-3xl font-bold mb-6">
-        {/* {locale === "ca"
-          ? `Nom: ${artist.name}`
-          : `Name: ${artist.name}`
-        } */}
         {artist.name}
       </h1>
 
