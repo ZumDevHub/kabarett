@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 export default async function ArtistPage({
   params,
 }: {
-  params: Promise<{ slug: string; locale: string }>;
+  params: { slug: string; locale: string };
 }) {
   const { slug, locale } = await params;
   const sbApi = storyblokApi();
