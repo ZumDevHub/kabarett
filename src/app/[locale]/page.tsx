@@ -2,7 +2,7 @@ import { storyblokApi } from "../../lib/storyblok";
 import { Artist, StoryblokStory } from "../../../types/storyblok";
 import ArtistsList from "../components/ArtistsList";
 
-export default async function Home({ params }: { params: { locale: string } }) {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
 
   const { locale } = await params;
   const sbApi = storyblokApi();
