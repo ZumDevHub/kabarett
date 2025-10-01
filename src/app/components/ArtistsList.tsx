@@ -1,35 +1,39 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 import type { Artist, StoryblokStory } from "../../../types/storyblok";
 import { useState, useEffect } from "react";
 
-
-export default function ArtistsList({ artists }: {artists: StoryblokStory<Artist>[]}) {
-
+export default function ArtistsList({
+  artists,
+  locale,
+}: {
+  artists: StoryblokStory<Artist>[];
+  locale: string;
+}) {
   const [artistsList, setArtistsList] = useState<StoryblokStory<Artist>[]>([]);
-  
-  // console.log("artistsList: ", artistsList.slice(0,2))
 
   function findSurname(completeName: string) {
     const surnameIndex = completeName.indexOf(" ") + 1;
-    return completeName.slice(surnameIndex)
+    return completeName.slice(surnameIndex);
   }
 
   useEffect(() => {
-    if(!artists) return;
-    const sortedList = [...artists].sort((a, b) => (findSurname(a.content.name)).localeCompare(findSurname(b.content.name)))
+    if (!artists) return;
+    const sortedList = [...artists].sort((a, b) =>
+      findSurname(a.content.name).localeCompare(findSurname(b.content.name))
+    );
     setArtistsList(sortedList);
   }, [artists]);
 
   return (
-       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {artistsList.map((artist) => (
         <li
           key={artist.uuid}
           className="rounded-2xl shadow p-4 bg-white border hover:shadow-lg transition"
         >
-          <Link href={`${artist.full_slug}`}>
+          <Link href={`/${locale}/cabaret/${artist.slug}`}>
             <h2 className="text-xl font-semibold">{artist.content.name}</h2>
             <p className="text-sm text-gray-600">
               {artist.content.birthPlace} ({artist.content.birthDate} –{" "}
@@ -39,7 +43,5 @@ export default function ArtistsList({ artists }: {artists: StoryblokStory<Artist
         </li>
       ))}
     </ul>
-  )
+  );
 }
-
-  
